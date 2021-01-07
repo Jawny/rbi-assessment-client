@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/rbi-assessment-client/static/css/main.8c8b27cf.chunk.css",
+    "main.js": "/rbi-assessment-client/static/js/main.c453a3a1.chunk.js",
+    "main.js.map": "/rbi-assessment-client/static/js/main.c453a3a1.chunk.js.map",
+    "runtime-main.js": "/rbi-assessment-client/static/js/runtime-main.32f7f136.js",
+    "runtime-main.js.map": "/rbi-assessment-client/static/js/runtime-main.32f7f136.js.map",
+    "static/js/2.8264e309.chunk.js": "/rbi-assessment-client/static/js/2.8264e309.chunk.js",
+    "static/js/2.8264e309.chunk.js.map": "/rbi-assessment-client/static/js/2.8264e309.chunk.js.map",
+    "static/js/3.2ed027b4.chunk.js": "/rbi-assessment-client/static/js/3.2ed027b4.chunk.js",
+    "static/js/3.2ed027b4.chunk.js.map": "/rbi-assessment-client/static/js/3.2ed027b4.chunk.js.map",
+    "index.html": "/rbi-assessment-client/index.html",
+    "static/css/main.8c8b27cf.chunk.css.map": "/rbi-assessment-client/static/css/main.8c8b27cf.chunk.css.map",
+    "static/js/2.8264e309.chunk.js.LICENSE.txt": "/rbi-assessment-client/static/js/2.8264e309.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.32f7f136.js",
+    "static/js/2.8264e309.chunk.js",
+    "static/css/main.8c8b27cf.chunk.css",
+    "static/js/main.c453a3a1.chunk.js"
+  ]
+}
