@@ -1,6 +1,6 @@
 # Try it out
 
-https://jawny.github.io/rbi-assessment-client/
+https://rbi-server.herokuapp.com/
 
 # How to run it locally
 
