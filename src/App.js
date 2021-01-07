@@ -10,9 +10,16 @@ const App = () => {
   const [winner, setWinner] = useState(false);
   const [gameOver, setGameOver] = useState(false);
 
-  const updateUrl = "http://localhost:8000/update";
-  const readUrl = "http://localhost:8000/";
-  const createUrl = "http://localhost:8000/create";
+  // Use for local development
+  // const updateUrl = "http://localhost:8000/update";
+  // const readUrl = "http://localhost:8000/";
+  // const createUrl = "http://localhost:8000/create";
+  // const deleteUrl = "http://localhost:8000/delete";
+
+  const updateUrl = "https://rbi-server.herokuapp.com/update";
+  const readUrl = "https://rbi-server.herokuapp.com/";
+  const createUrl = "https://rbi-server.herokuapp.com/create";
+  const deleteUrl = "https://rbi-server.herokuapp.com/delete";
 
   // Initialize the game
   useEffect(() => {

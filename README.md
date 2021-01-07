@@ -1,3 +1,12 @@
+# Try it out
+
+https://jawny.github.io/rbi-assessment-client/
+
+# How to run it locally
+
+1. Clone [Server](https://github.com/Jawny/rbi-assessment) and follow set-up guide
+2.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
