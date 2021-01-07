@@ -1,116 +1,104 @@
 import React, { useState, useEffect } from "react";
-import { PlayersScore } from "./components/PlayerScore";
+import { PlayerScore } from "./components/PlayerScore";
 import { CalculateScore, CheckWinner } from "./utils/index";
 import "./App.css";
 import axios from "axios";
 
-function App() {
-  const [playerOneScore, setplayerOneScore] = useState(0);
-  const [playerTwoScore, setplayerTwoScore] = useState(0);
-  const [winner, setWinner] = useState("");
+const App = () => {
+  const [scores, setScores] = useState([0, 0]);
+  const [gameId, setGameId] = useState("");
+  const [winner, setWinner] = useState(false);
   const [gameOver, setGameOver] = useState(false);
 
-  const postUrl = "http://localhost:8080/post";
-  const getUrl = "http://localhost:8080/get";
-  const player1 = "player1";
-  const player2 = "player2";
+  const postUrl = "http://localhost:8000/post";
+  const getUrl = "http://localhost:8000/get";
+  const createUrl = "http://localhost:8000/create";
 
-  const startingData = [
-    {
-      player: player1,
-      score: playerOneScore,
-    },
-    {
-      player: player2,
-      score: playerTwoScore,
-    },
-  ];
-
+  // Initialize the game
   useEffect(() => {
     getGameData();
-  });
+  }, []);
 
+  // Check if the game is over whenever scores are updated
+  useEffect(() => {
+    handleIfGameOver(scores);
+  }, [scores]);
+
+  // Get game data from database, if no game data exists then create a game with scores [0,0]
   const getGameData = async () => {
     const data = await axios.get(getUrl);
+
+    // Check if the database is empty, if true then create a game with scores [0,0]
+    // Else get game[0]'s id and setGameId.
     if (data.data.length < 1) {
-      handleStartGame();
+      const newGameId = await axios.post(createUrl, scores);
+      setGameId(newGameId.data["_id"]);
     } else {
-      setplayerOneScore(data.data[0].score1);
-      setplayerTwoScore(data.data[0].score2);
+      setGameId(data.data[0]["_id"]);
+      setScores(data.data[0].scores);
     }
+  };
 
-    const gameWinner = CheckWinner(data.data[0]);
-    console.log(gameWinner);
-    if (gameWinner) {
+  // Check if game is over setGameOver to true, and setWinner to winning player
+  const handleIfGameOver = (scores) => {
+    // Check if either player has won and return 0 for player1 and 1 for player2
+    const gameWinner = CheckWinner(scores);
+    // Check if gameWinner has been set, null = no winner
+    if (gameWinner != null) {
       setGameOver(true);
-      setWinner(gameWinner);
+      gameWinner ? setWinner("Player2") : setWinner("Player1");
     }
   };
 
-  const handleScore = async (player) => {
-    let data = {};
+  // Calculate new score based on index,
+  // Update Scores state and make post request to update database score
+  // Check if game is over
+  const handleScore = async (index) => {
+    // Calculate new score from index and setScores state with new scores
+    // index 0 = score1 index 1 = score2
+    const newScore = CalculateScore(scores[index]);
+    const newScores = index ? [scores[0], newScore] : [newScore, scores[1]];
+    setScores(newScores);
 
-    if (player == player1) {
-      const newScore = CalculateScore(playerOneScore);
-
-      data = {
-        player1: player1,
-        score1: newScore,
-        player2: player2,
-        score2: playerTwoScore,
-      };
-    } else if (player == player2) {
-      const newScore = CalculateScore(playerTwoScore);
-
-      data = {
-        player1: player1,
-        score1: playerOneScore,
-        player2: player2,
-        score2: newScore,
-      };
-    }
-
-    await axios.post(postUrl, data).then(() => {
-      getGameData();
-    });
+    // Update scores in the database
+    await axios
+      .post(postUrl, { scores: newScores, id: gameId })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
-  const handleStartGame = async () => {
-    const data = {
-      player1: player1,
-      score1: playerOneScore,
-      player2: player2,
-      score2: playerTwoScore,
-    };
-    await axios.post(postUrl, data);
-  };
-
+  // Reset database scores to [0,0], set gameOver state to false and call getGameData to rerender DOM
   const handleResetGame = async () => {
-    const data = {
-      player1: player1,
-      score1: 0,
-      player2: player2,
-      score2: 0,
-    };
-    await axios.post(postUrl, data).then(() => {
-      setWinner("");
-      setGameOver(false);
-    });
+    await axios.post(postUrl, { scores: [0, 0], id: gameId });
+    await setWinner("");
+    await setGameOver(false);
+    await getGameData();
   };
 
   return (
-    <div className="App">
-      <div className="players-container">
-        <PlayersScore
-          players={startingData}
-          handleScore={handleScore}
-          gameOver={gameOver}
-        />
-        {winner != "" ? <h1>{winner} has won!</h1> : <></>}
-      </div>
+    <div>
+      <PlayerScore
+        player="player1"
+        scores={scores}
+        index={0}
+        handleScore={handleScore}
+        gameOver={gameOver}
+      />
+      <PlayerScore
+        player="player2"
+        scores={scores}
+        index={1}
+        handleScore={handleScore}
+        gameOver={gameOver}
+      />
+      {winner != "" ? <h1>{winner} has won!</h1> : <></>}
       <button onClick={handleResetGame}>RESET GAME</button>
     </div>
   );
-}
+};
 
 export default App;

@@ -1,25 +1,23 @@
-const CheckWinner = (data) => {
-  const { player1, player2, score1, score2 } = data;
-  const difference = score1 - score2;
-  console.log(data);
+const CheckWinner = (scores) => {
+  const difference = scores[0] - scores[1];
   switch (difference) {
     case 20:
-      return player1;
+      return 0;
       break;
     case 25:
-      return player1;
+      return 0;
       break;
     case 30:
-      return player1;
+      return 0;
       break;
     case -20:
-      return player2;
+      return 1;
       break;
     case -25:
-      return player2;
+      return 1;
       break;
     case -30:
-      return player2;
+      return 1;
       break;
     default:
       return null;
