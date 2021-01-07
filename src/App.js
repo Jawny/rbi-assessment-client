@@ -10,8 +10,8 @@ const App = () => {
   const [winner, setWinner] = useState(false);
   const [gameOver, setGameOver] = useState(false);
 
-  const postUrl = "http://localhost:8000/post";
-  const getUrl = "http://localhost:8000/get";
+  const updateUrl = "http://localhost:8000/update";
+  const readUrl = "http://localhost:8000/";
   const createUrl = "http://localhost:8000/create";
 
   // Initialize the game
@@ -26,12 +26,12 @@ const App = () => {
 
   // Get game data from database, if no game data exists then create a game with scores [0,0]
   const getGameData = async () => {
-    const data = await axios.get(getUrl);
-
+    const data = await axios.get(readUrl);
+    console.log("gamedata", data);
     // Check if the database is empty, if true then create a game with scores [0,0]
     // Else get game[0]'s id and setGameId.
     if (data.data.length < 1) {
-      const newGameId = await axios.post(createUrl, scores);
+      const newGameId = await axios.post(createUrl);
       setGameId(newGameId.data["_id"]);
     } else {
       setGameId(data.data[0]["_id"]);
@@ -62,7 +62,7 @@ const App = () => {
 
     // Update scores in the database
     await axios
-      .post(postUrl, { scores: newScores, id: gameId })
+      .put(updateUrl, { scores: newScores, id: gameId })
       .then((res) => {
         console.log(res);
       })
@@ -73,7 +73,7 @@ const App = () => {
 
   // Reset database scores to [0,0], set gameOver state to false and call getGameData to rerender DOM
   const handleResetGame = async () => {
-    await axios.post(postUrl, { scores: [0, 0], id: gameId });
+    await axios.put(updateUrl, { scores: [0, 0], id: gameId });
     await setWinner("");
     await setGameOver(false);
     await getGameData();
